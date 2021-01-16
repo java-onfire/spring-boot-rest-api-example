@@ -1,5 +1,6 @@
 package com.java.onfire.controller;
 
+import com.java.onfire.entity.Actor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +19,13 @@ class ActorControllerTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    void should_return_hello_world() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/hello", String.class);
-        String body = response.getBody();
+    void should_save_an_actor() {
+        Actor actor = new Actor(1L, "Monica", "Geller");
+        ResponseEntity<Actor> response = restTemplate.postForEntity("/api/actors", actor, Actor.class);
 
-        Assertions.assertThat(body).isEqualTo("hello world !");
+        Assertions.assertThat(response.getBody().getId()).isEqualTo(1);
+        Assertions.assertThat(response.getBody().getFirstname()).isEqualTo("Monica");
+        Assertions.assertThat(response.getBody().getLastname()).isEqualTo("Geller");
     }
 
-    @Test
-    void should_return_hello_chris() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/api/hello?name=chris", String.class);
-        String body = response.getBody();
-
-        Assertions.assertThat(body).isEqualTo("hello chris !");
-    }
-
-    @Test
-    void should_return_hello_bryan() {
-        ResponseEntity<String> response = restTemplate.getForEntity("/api/hello/Bryan", String.class);
-        String body = response.getBody();
-
-        Assertions.assertThat(body).isEqualTo("hello Bryan !");
-    }
 }
